@@ -86,10 +86,10 @@ public class PerfLogger {
 
         Object ret = joinPoint.proceed();
 
-        long diff = (System.nanoTime() - dateDebut) / 10000000;
+        long diff = (System.nanoTime() - dateDebut) / 1000000;
 
-        //perf logs level is DEBUG, you can change it
-        LOGGER.debug(sb.toString() + Long.toString(diff));
+        //perf logs level is INFO, you can change it
+        LOGGER.info(sb.toString() + Long.toString(diff));
 
         return ret;
     }
