@@ -13,7 +13,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
+/**.
  * WARNING DISABLE THIS ASPECT IN NORMAL PRODUCTION MODE
  *
  * */
@@ -36,7 +36,11 @@ public class PerfLogger {
     /** threadIdHash */
     private static ConcurrentHashMap<Long, Long> threadIdHash = new ConcurrentHashMap<Long, Long>();
 
+    /** first line boolean */
+    private static final boolean firstLine = true;
 
+    /** multi thread lock*/
+    private static final Object lock = new Object();
 
     /** Type of line to log (configured in springcontext file
      * Service is a special tag, it's processed as upper tier.
@@ -46,6 +50,7 @@ public class PerfLogger {
     /** logParameters */
     private boolean logParameters = false;
 
+    //TODO : create first line to title of columns
     /**
      * logAround
      *
@@ -55,7 +60,7 @@ public class PerfLogger {
      * @throws Throwable
      *             exception
      */
-    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    public final Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         Object[] args = joinPoint.getArgs();
 
@@ -72,7 +77,7 @@ public class PerfLogger {
             boolean firstTime = true;
             // method args
             for (Object arg : args) {
-                if(!firstTime)
+                if (!firstTime)
                     sb.append(PARAM_SEPARATOR);
                 sb.append("'").append(arg).append("'");
                 firstTime = false;

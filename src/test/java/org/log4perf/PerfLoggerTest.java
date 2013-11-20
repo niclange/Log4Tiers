@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nicolas
@@ -27,9 +31,11 @@ public class PerfLoggerTest {
     @Test
     public void testLogAround() throws Exception {
         int res=2;
-        for(int i=0;i<100;i++) {
+        for(int i=0;i<10;i++) {
              res = service.calculateService(res);
         }
 
+        File file = new File("target/test/log4perf.log");
+        assertTrue(file.exists());
     }
 }
