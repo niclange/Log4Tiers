@@ -94,7 +94,7 @@ public class PerfLogger {
         long diff = (System.nanoTime() - dateDebut) / 1000000;
 
         //perf logs level is INFO, you can change it
-        LOGGER.info(sb.toString() + Long.toString(diff));
+        LOGGER.info(String.format("%1$s%2$s%3$s", sb.toString(),SEPARATOR, Long.toString(diff)));
 
         return ret;
     }

@@ -8,5 +8,5 @@ package org.log4perf.test.dao;
  * To change this template use File | Settings | File Templates.
  */
 public interface Dao {
-    int SelectById(int id);
+    int selectById(int id);
 }

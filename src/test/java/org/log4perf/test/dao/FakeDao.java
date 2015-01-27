@@ -8,8 +8,8 @@ package org.log4perf.test.dao;
  * To change this template use File | Settings | File Templates.
  */
 public class FakeDao implements Dao {
-    @Override
-    public int SelectById(int id){
+    
+	public int selectById(int id){
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
