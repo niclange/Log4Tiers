@@ -31,7 +31,8 @@ public class PerfLoggerTest {
     @Test
     public void testLogAround() throws Exception {
         int res=2;
-        for(int i=0;i<10;i++) {
+        for(int i=0;i<100;i++) {
+        	Thread.sleep(2000);
              res = service.calculateService(res);
         }
 

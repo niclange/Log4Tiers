@@ -1,41 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	<!-- mbean server -->
+	<bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
+  		<property name="locateExistingServerIfPossible" value="true"/>
+	</bean>
+
+	<!-- MBEAN -->
+	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+		<property name="beans">
+			<map>
+				<entry key="log4Tiers:name=LoggerService" value-ref="myLoggerService" />
+				<entry key="log4Tiers:name=LoggerDao" value-ref="myLoggerDao" />
+			</map>
+		</property>
+		<property name="registrationBehaviorName" value="REGISTRATION_REPLACE_EXISTING" />
+
+		<property name="server" ref="mbeanServer" />
+	</bean>
+
+	<!-- Application beans -->
+	<bean id="myService" class="org.log4perf.test.service.FakeService" />
+	<bean id="myDao" class="org.log4perf.test.dao.FakeDao" />
 
 
-    <bean id="myService" class="org.log4perf.test.service.FakeService"/>
-    <bean id="myDao" class="org.log4perf.test.dao.FakeDao"/>
+	<!-- LOGGERS -->
+	<bean id="myLoggerService" class="org.log4perf.PerfLogger">
+		<property name="logTag" value="service" />
+	</bean>
 
-    <bean id="myLoggerService" class="org.log4perf.PerfLogger">
-        <property name="logTag" value="service" />
-    </bean>
-
-    <bean id="myLoggerDao" class="org.log4perf.PerfLogger">
-        <property name="logTag" value="dao" />
-    </bean>
-
-    <!-- AOP -->
+	<bean id="myLoggerDao" class="org.log4perf.PerfLogger">
+		<property name="logTag" value="dao" />
+	</bean>
 
 
-    <aop:config>
-        <aop:pointcut id="servicePointcut"
-                      expression="execution(* org.log4perf.test.service.Service.*(..))" />
-        <aop:aspect id="loggingServiceAspect" ref="myLoggerService">
-            <aop:around pointcut-ref="servicePointcut"
-                        method="logAround" />
+	<!-- AOP -->
 
-        </aop:aspect>
-    </aop:config>
-    <aop:config>
-        <aop:pointcut id="daoPointcut"
-                      expression="execution(* org.log4perf.test.dao.Dao.*(..))" />
-        <aop:aspect id="loggingDaoAspect" ref="myLoggerDao">
-            <aop:around pointcut-ref="daoPointcut"
-                        method="logAround" />
 
-        </aop:aspect>
-    </aop:config>
+	<aop:config>
+		<aop:pointcut id="servicePointcut"
+			expression="execution(* org.log4perf.test.service.Service.*(..))" />
+		<aop:aspect id="loggingServiceAspect" ref="myLoggerService">
+			<aop:around pointcut-ref="servicePointcut" method="logAround" />
+
+		</aop:aspect>
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="daoPointcut"
+			expression="execution(* org.log4perf.test.dao.Dao.*(..))" />
+		<aop:aspect id="loggingDaoAspect" ref="myLoggerDao">
+			<aop:around pointcut-ref="daoPointcut" method="logAround" />
+
+		</aop:aspect>
+	</aop:config>
 
 </beans>
